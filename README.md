@@ -41,8 +41,11 @@ O aplicativo se conecta a um backend externo.
 - **URL Base da API:** `https://apicalvaodecria-production.up.railway.app/api/v1`
 - **Autenticação:** A comunicação com a API é feita usando tokens JWT (Access Token e Refresh Token). O cliente Axios (`src/utils/api.ts`) está configurado com interceptors para adicionar automaticamente o token de acesso aos headers e para tentar renovar o token (refresh) automaticamente em caso de expiração (erro 401).
 
-## Para executar o projeto locamente rode a seguinte sequência de comandos:
 
+
+
+# Para executar o projeto locamente rode a seguinte sequência de comandos:
+## OBS: É necessário ter o Android Studio instalado para rodar o app em um emulador ou dispositivo Android.
 ```bash
 git clone https://github.com/refdudu/calvao-de-cria-app
 cd calvao-de-cria-app
