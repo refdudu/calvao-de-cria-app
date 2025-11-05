@@ -13,6 +13,7 @@ import type {
   UpdateCartItemData,
 } from "../types";
 import { useAuth } from "./AuthContext";
+import { ShoppingCartDrawer } from "../components/ShoppingCartDrawer";
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
@@ -21,6 +22,8 @@ interface CartProviderProps {
 }
 
 export const CartProvider = ({ children }: CartProviderProps) => {
+  const [isCartDrawerOpen, setIsCartDrawerOpen] = useState(false);
+
   const [cart, setCart] = useState<Cart | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
@@ -103,9 +106,23 @@ export const CartProvider = ({ children }: CartProviderProps) => {
     removeFromCart,
     getCart,
     clearCart,
+    openCartDrawer: () => setIsCartDrawerOpen(true),
   };
 
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  return (
+    <CartContext.Provider value={value}>
+      <ShoppingCartDrawer
+        {...{
+          cart,
+          removeFromCart,
+          updateCartItem,
+        }}
+        isOpen={isCartDrawerOpen}
+        onClose={() => setIsCartDrawerOpen(false)}
+      />
+      {children}
+    </CartContext.Provider>
+  );
 };
 
 export const useCart = () => {

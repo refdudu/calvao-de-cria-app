@@ -69,7 +69,6 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
         <h3 className="text-lg font-medium mb-3 text-text1">Por preço</h3>
 
         <IonList
-          className="bg-white"
           style={{
             background: "white",
           }}
@@ -79,7 +78,12 @@ export const FilterDrawer: React.FC<FilterDrawerProps> = ({
             onIonChange={(e) => handlePriceChange(e.detail.value)}
           >
             {FILTER_PRICE_RANGES.map((range) => (
-              <IonItem onClick={()=> handlePriceChange(range.value)} key={range.value} lines="none" className="bg-white">
+              <IonItem
+                onClick={() => handlePriceChange(range.value)}
+                key={range.value}
+                lines="none"
+                className="bg-white"
+              >
                 <IonRadio slot="start" value={range.value} className="mr-3" />
                 <IonLabel className="text-text1">{range.label}</IonLabel>
               </IonItem>

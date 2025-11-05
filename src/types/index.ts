@@ -141,8 +141,6 @@ export interface OrderAddress {
   phone: string;
 }
 
-
-
 export interface OrdersResponse {
   status: string;
   message: string;
@@ -252,5 +250,5 @@ export interface CartContextType {
   removeFromCart: (productId: string) => Promise<void>;
   getCart: () => Promise<void>;
   clearCart: () => void;
+  openCartDrawer: () => void;
 }
-

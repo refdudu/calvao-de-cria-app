@@ -16,6 +16,7 @@ import {
   IonIcon,
   IonButtons,
   IonBackButton,
+  IonRouterLink,
 } from "@ionic/react";
 import {
   mailOutline,
@@ -160,12 +161,12 @@ export const LoginPage = () => {
               {/* Link esqueci minha senha */}
               <div className="ion-text-end ion-margin-bottom">
                 <IonText>
-                  <a
-                    onClick={() => history.push("/auth/forgot-password")}
+                  <IonRouterLink
+                    // onClick={() => history.push("/auth/forgot-password")}
                     className="text-sm font-semibold cursor-pointer text-primary"
                   >
-                    Esqueci minha senha
-                  </a>
+                    Esqueci minha senha (não funcional)
+                  </IonRouterLink>
                 </IonText>
               </div>
 
@@ -201,12 +202,13 @@ export const LoginPage = () => {
                 Ainda não tem uma conta?
               </p>
               <IonButton
+                disabled
                 expand="block"
                 fill="outline"
                 color="secondary"
                 onClick={() => history.push("/auth/signup")}
               >
-                Criar nova conta
+                Criar nova conta (não funcional)
               </IonButton>
             </div>
           </div>

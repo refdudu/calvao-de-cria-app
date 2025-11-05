@@ -11,30 +11,34 @@ import {
   IonFooter,
   IonText,
   IonImg,
+  IonItem,
+  IonRouterLink,
+  IonLoading,
 } from "@ionic/react";
-import {
-  close,
-  trashOutline,
-  addOutline,
-  removeOutline,
-  add,
-  remove,
-} from "ionicons/icons";
-import type { CartItem } from "../types";
-import { useCart } from "../contexts/CartContext";
+import { close, trashOutline, add, remove, sync } from "ionicons/icons";
+import type { Cart, CartItem, UpdateCartItemData } from "../types";
 import { useAuth } from "../contexts/AuthContext";
+import { useState } from "react";
 
 interface ShoppingCartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  cart: Cart | null;
+  updateCartItem: (
+    productId: string,
+    data: UpdateCartItemData
+  ) => Promise<void>;
+  removeFromCart: (productId: string) => Promise<void>;
 }
 
 export const ShoppingCartDrawer: React.FC<ShoppingCartDrawerProps> = ({
   isOpen,
   onClose,
+  cart,
+  removeFromCart,
+  updateCartItem,
 }) => {
   const history = useHistory();
-  const { cart, updateCartItem, removeFromCart } = useCart();
   const { isAuthenticated } = useAuth();
 
   // Calcular total do carrinho
@@ -84,7 +88,15 @@ export const ShoppingCartDrawer: React.FC<ShoppingCartDrawerProps> = ({
                   "Adicione produtos para continuar"
                 ) : (
                   <>
-                    Faça <Link onClick={onClose} to="/auth/login">login</Link> para continuar
+                    Faça{" "}
+                    <IonRouterLink
+                      className="text-primary"
+                      href="/auth/login"
+                      onClick={onClose}
+                    >
+                      login
+                    </IonRouterLink>{" "}
+                    para continuar
                   </>
                 )}
               </IonText>
@@ -195,16 +207,25 @@ const ProductRowItem: React.FC<ProductRowItemProps> = ({
 
 interface CounterProps {
   quantity: number;
-  onQuantityChange: (newQuantity: number) => void;
+  onQuantityChange: (newQuantity: number) => Promise<void>;
 }
 
 const Counter: React.FC<CounterProps> = ({ quantity, onQuantityChange }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const handleUpdate = async (quantity: number) => {
+    try {
+      setIsLoading(true);
+      await onQuantityChange(quantity);
+      setIsLoading(false);
+    } catch {}
+  };
+
   const handleDecrease = () => {
-    onQuantityChange(quantity - 1);
+    handleUpdate(quantity - 1);
   };
 
   const handleIncrease = () => {
-    onQuantityChange(quantity + 1);
+    handleUpdate(quantity + 1);
   };
 
   return (
@@ -219,7 +240,7 @@ const Counter: React.FC<CounterProps> = ({ quantity, onQuantityChange }) => {
         <IonIcon slot="icon-only" icon={remove} />
       </IonButton>
       <IonText className="px-3 font-medium min-w-8 text-center text-text1">
-        {quantity}
+        {isLoading ? <IonIcon icon={sync} className="animate-spin" /> : quantity}
       </IonText>
       <IonButton
         className="text-text1"

@@ -26,11 +26,11 @@ import {
 import { funnel, cartOutline, personCircleOutline } from "ionicons/icons";
 import { ProductCard } from "../components/ProductCard";
 import { FilterDrawer } from "../components/FilterDrawer";
-import { ShoppingCartDrawer } from "../components/ShoppingCartDrawer";
 import { productService } from "../services/productService";
 import type { Product } from "../types";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
+import { Layout } from "../components/Layout";
 
 const ProductsList: React.FC = () => {
   const history = useHistory();
@@ -52,8 +52,6 @@ const ProductsList: React.FC = () => {
   const ITEMS_PER_PAGE = 8;
 
   // Calcular total de itens no carrinho
-  const cartItemsCount =
-    cart?.items?.reduce((total, item) => total + item.quantity, 0) || 0;
 
   // Buscar produtos (primeira carga ou quando filtros mudam)
   useEffect(() => {
@@ -163,75 +161,33 @@ const ProductsList: React.FC = () => {
   };
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar className="toolbar-primary">
-          <IonTitle className="mx-4">Produtos</IonTitle>
-          <IonButtons slot="end">
-            <IonButton
-              onClick={() => setIsCartDrawerOpen(true)}
-              className="relative"
-            >
-              <IonIcon slot="icon-only" icon={cartOutline} />
-              {cartItemsCount > 0 && (
-                <IonBadge
-                  color="danger"
-                  className="absolute -top-2 -right-2 text-xs min-w-4 h-4 rounded-full flex items-center justify-center"
-                >
-                  {cartItemsCount}
-                </IonBadge>
-              )}
-            </IonButton>
-            <IonButton
-              className={isAuthenticated && user ? "bg-secondary rounded-full w-8 h-8" : ""}
-            //   fill={!isAuthenticated ? "clear" : "default"}
-            //   color="secondary"
-              onClick={() =>
-                isAuthenticated
-                  ? history.push("/profile/settings")
-                  : history.push("/auth/login")
-              }
-            >
-              {isAuthenticated && user ? (
-                <IonText>
-                  {user.name
-                    ?.split(" ")
-                    .map((x) => x[0])
-                    .join("")}
-                </IonText>
-              ) : (
-                <IonIcon slot="icon-only" icon={personCircleOutline} />
-              )}
-            </IonButton>
-          </IonButtons>
-        </IonToolbar>
-        <IonToolbar className="toolbar-white border-b-2 border-b-primary">
-          <IonSearchbar
-            value={searchTerm}
-            onIonInput={(e) => handleSearch(e.detail.value!)}
-            placeholder="Buscar produtos..."
-            debounce={500}
-            animated
-            className="ion-no-padding"
-          />
-        </IonToolbar>
-        <IonToolbar className="toolbar-white">
-          <IonSegment
-            value={activeTab}
-            onIonChange={(e) =>
-              handleTabChange(e.detail.value as "products" | "offers")
-            }
-            className="bg-white"
-          >
-            <IonSegmentButton value="products">
-              <IonLabel className="text-text1">Produtos</IonLabel>
-            </IonSegmentButton>
-            <IonSegmentButton value="offers">
-              <IonLabel className="text-text1">Promoções</IonLabel>
-            </IonSegmentButton>
-          </IonSegment>
-        </IonToolbar>
-      </IonHeader>
+    <Layout title={activeTab === "products" ? "Produtos" : "Promoções"}>
+      <IonToolbar className="toolbar-white border-b-2 border-b-primary">
+        <IonSearchbar
+          value={searchTerm}
+          onIonInput={(e) => handleSearch(e.detail.value!)}
+          placeholder="Buscar produtos..."
+          debounce={500}
+          animated
+          className="ion-no-padding"
+        />
+      </IonToolbar>
+      <IonToolbar className="toolbar-white">
+        <IonSegment
+          value={activeTab}
+          onIonChange={(e) =>
+            handleTabChange(e.detail.value as "products" | "offers")
+          }
+          className="bg-white"
+        >
+          <IonSegmentButton value="products">
+            <IonLabel className="text-text1">Produtos</IonLabel>
+          </IonSegmentButton>
+          <IonSegmentButton value="offers">
+            <IonLabel className="text-text1">Promoções</IonLabel>
+          </IonSegmentButton>
+        </IonSegment>
+      </IonToolbar>
 
       <IonContent className="ion-padding bg-background pb-24">
         {/* Filtro selecionado */}
@@ -329,11 +285,7 @@ const ProductsList: React.FC = () => {
         selectedPrice={selectedPrice}
         onPriceChange={handlePriceChange}
       />
-      <ShoppingCartDrawer
-        isOpen={isCartDrawerOpen}
-        onClose={() => setIsCartDrawerOpen(false)}
-      />
-    </IonPage>
+    </Layout>
   );
 };
 
