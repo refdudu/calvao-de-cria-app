@@ -54,7 +54,7 @@ npx ionic build
 npx cap sync android
 npx cap open android
 ```
-
+## OBS: Figma está no ROOT do projeto
 # Massa de Dados
 
 ```
